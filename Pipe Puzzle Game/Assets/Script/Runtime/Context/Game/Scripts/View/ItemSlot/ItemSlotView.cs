@@ -17,22 +17,27 @@ namespace Script.Runtime.Context.Game.Scripts.View.ItemSlot
     public void OnDrop(PointerEventData eventData)
     {
       GameObject droppedObject = eventData.pointerDrag;
+
       if (droppedObject != null)
       {
-        dispatcher.Dispatch(ItemSlotEvents.ItemDropped, droppedObject);
+        dispatcher.Dispatch(ItemSlotEvents.ItemSlotFilled, droppedObject);
       }
     }
 
-    public void SetDroppedItem(GameObject droppedItem)
+    public void SetItem(GameObject droppedItem)
     {
       droppedItem.transform.SetParent(transform);
+
       RectTransform droppedItemRectTransform = droppedItem.GetComponent<RectTransform>();
       droppedItemRectTransform.sizeDelta = _itemSlotRectTransform.sizeDelta;
+
+      BoxCollider2D droppedItemBoxCollider2D = droppedItem.GetComponent<BoxCollider2D>();
+      droppedItemBoxCollider2D.size = _itemSlotRectTransform.sizeDelta;
     }
 
     public string GetPosition()
     {
-      return transform.name;
+      return name;
     }
   }
 }

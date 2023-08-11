@@ -13,8 +13,6 @@ namespace Script.Runtime.Context.Game.Scripts.Models.Grid
     [Inject(ContextKeys.CONTEXT_DISPATCHER)]
     public IEventDispatcher dispatcher { get; set; }
 
-    private const string GridDataAddKey = "GridDataAsset";
-
     private Dictionary<string, GridVo> _gridMap;
 
     [PostConstruct]
@@ -39,7 +37,7 @@ namespace Script.Runtime.Context.Game.Scripts.Models.Grid
           {
             pipeType = PipeType.None,
             isOccupied = false,
-            position = $"{x},{y}"
+            position = new Vector2(x, y)
           };
           _gridMap.Add($"{x},{y}", gridVo);
         }
@@ -61,7 +59,6 @@ namespace Script.Runtime.Context.Game.Scripts.Models.Grid
     {
       if (!_gridMap.ContainsKey(position))
       {
-        Debug.LogError("There is no such position in grid map. Key: " + position);
         return true;
       }
 
@@ -73,7 +70,6 @@ namespace Script.Runtime.Context.Game.Scripts.Models.Grid
     {
       if (!_gridMap.ContainsKey(position))
       {
-        Debug.LogError("There is no such position in grid map. Key: " + position);
         return;
       }
 
@@ -83,6 +79,36 @@ namespace Script.Runtime.Context.Game.Scripts.Models.Grid
     public bool GetIsInMap(string position)
     {
       return _gridMap.ContainsKey(position);
+    }
+
+    public void SetPipeType(string position, PipeType pipeType)
+    {
+      if (!_gridMap.ContainsKey(position))
+      {
+        return;
+      }
+
+      _gridMap[position].pipeType = pipeType;
+    }
+
+    public PipeType GetPipeType(string position)
+    {
+      if (!_gridMap.ContainsKey(position))
+      {
+        return PipeType.None;
+      }
+
+      return _gridMap[position].pipeType;
+    }
+
+    public Vector2 GetPosition(string position)
+    {
+      if (!_gridMap.ContainsKey(position))
+      {
+        return Vector2.zero;
+      }
+
+      return _gridMap[position].position;
     }
   }
 }

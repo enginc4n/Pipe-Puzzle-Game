@@ -38,10 +38,7 @@ namespace Script.Runtime.Context.Game.Scripts.Config
       mediationBinder.Bind<MainMenuPanelView>().To<MainMenuPanelMediator>();
       mediationBinder.Bind<GameMenuPanelView>().To<GameMenuPanelMediator>();
       mediationBinder.Bind<GameBoardView>().To<GameBoardMediator>();
-      mediationBinder.Bind<PipeSpawnView>().To<PipeSpawnMediator>();
-
-      commandBinder.Bind(GameEvents.ObjectPlaced).InSequence()
-        .To<ObjectPlacedCommand>();
+      mediationBinder.Bind<PipeSlotView>().To<PipeSlotMediator>();
 
       commandBinder.Bind(GameEvents.ObjectPositionChanged)
         .To<ObjectPositionChangedCommand>();

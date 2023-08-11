@@ -1,5 +1,6 @@
 ﻿using Script.Runtime.Context.Game.Scripts.Enums;
 using Script.Runtime.Context.Game.Scripts.Models.Grid;
+using Script.Runtime.Context.Game.Scripts.View.Pipe;
 using strange.extensions.dispatcher.eventdispatcher.api;
 using strange.extensions.mediation.impl;
 using UnityEngine;
@@ -8,7 +9,7 @@ namespace Script.Runtime.Context.Game.Scripts.View.ItemSlot
 {
   public enum ItemSlotEvents
   {
-    ItemDropped
+    ItemSlotFilled
   }
 
   public class ItemSlotMediator : EventMediator
@@ -21,19 +22,19 @@ namespace Script.Runtime.Context.Game.Scripts.View.ItemSlot
 
     public override void OnRegister()
     {
-      view.dispatcher.AddListener(ItemSlotEvents.ItemDropped, OnItemDropped);
+      view.dispatcher.AddListener(ItemSlotEvents.ItemSlotFilled, OnItemPlaced);
     }
 
-    private void OnItemDropped(IEvent evt)
+    private void OnItemPlaced(IEvent evt)
     {
       GameObject droppedObject = evt.data as GameObject;
-
       if (droppedObject == null)
       {
         return;
       }
 
       string position = view.GetPosition();
+      PipeType pipeType = droppedObject.GetComponent<PipeView>().pipeType;
 
       bool isOccupied = gridModel.GetIsOccupied(position);
       if (isOccupied)
@@ -41,13 +42,14 @@ namespace Script.Runtime.Context.Game.Scripts.View.ItemSlot
         return;
       }
 
-      view.SetDroppedItem(droppedObject);
-      dispatcher.Dispatch(GameEvents.ObjectPlaced, position);
+      gridModel.SetIsOccupied(position, true);
+      gridModel.SetPipeType(position, pipeType);
+      view.SetItem(droppedObject);
     }
 
     public override void OnRemove()
     {
-      view.dispatcher.RemoveListener(ItemSlotEvents.ItemDropped, OnItemDropped);
+      view.dispatcher.RemoveListener(ItemSlotEvents.ItemSlotFilled, OnItemPlaced);
     }
   }
 }

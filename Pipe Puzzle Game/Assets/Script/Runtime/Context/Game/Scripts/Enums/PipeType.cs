@@ -6,6 +6,8 @@
     Flat,
     Corner,
     Plus,
-    T
+    T,
+    Start,
+    End
   }
 }

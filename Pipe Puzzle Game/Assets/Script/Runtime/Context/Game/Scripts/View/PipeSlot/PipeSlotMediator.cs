@@ -10,10 +10,10 @@ namespace Script.Runtime.Context.Game.Scripts.View.PipeSpawn
     SpawnSlotEmpty
   }
 
-  public class PipeSpawnMediator : EventMediator
+  public class PipeSlotMediator : EventMediator
   {
     [Inject]
-    public PipeSpawnView view { get; set; }
+    public PipeSlotView view { get; set; }
 
     public override void OnRegister()
     {

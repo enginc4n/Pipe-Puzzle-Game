@@ -228,7 +228,10 @@ MonoBehaviour:
   column: 5
   row: 5
   spacing: {x: 0, y: 0}
-  itemSlotPrefab: {fileID: 7674696558320891047, guid: f8742e034ae85ec4b89a6c4fd37587d9, type: 3}
+  startPipePrefab: {fileID: 6897339357759270965, guid: 9961f8f9605614447a6818f7d1960a42, type: 3}
+  endPipePrefab: {fileID: 6897339357759270965, guid: e97e67ad76e4b934395324d5351bdd5a, type: 3}
+  offsetColor: {r: 0.5, g: 0.5, b: 0.5, a: 0.2509804}
+  normalColor: {r: 1, g: 1, b: 1, a: 0.2509804}
 --- !u!1 &661933984
 GameObject:
   m_ObjectHideFlags: 0
@@ -675,9 +678,6 @@ MonoBehaviour:
   spawnSlotPrefab: {fileID: 4963965110348348212, guid: 6ad723d93202b8144a4750ab518c41f3, type: 3}
   pipePrefab:
   - {fileID: 6897339357759270965, guid: 44c664c7b51f2f841b548a45779d5f7d, type: 3}
-  - {fileID: 6897339357759270965, guid: 21c5e9abe357b354f969480f959b1d16, type: 3}
-  - {fileID: 6897339357759270965, guid: 4e61461e9ddb9534abab7ef2b0913a4f, type: 3}
-  - {fileID: 6897339357759270965, guid: 6087d93a9bb62c64fa145b8af2ff4d2c, type: 3}
 --- !u!114 &940954883
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,4 +1,5 @@
-﻿using Script.Runtime.Context.Game.Scripts.Models.Grid;
+﻿using Script.Runtime.Context.Game.Scripts.Enums;
+using Script.Runtime.Context.Game.Scripts.Models.Grid;
 using Script.Runtime.Context.Game.Scripts.View.PipeSpawn;
 using strange.extensions.command.impl;
 using UnityEngine;
@@ -20,6 +21,7 @@ namespace Script.Runtime.Context.Game.Scripts.Command
       }
 
       gridModel.SetIsOccupied(oldParent.name, false);
+      gridModel.SetPipeType(oldParent.name, PipeType.None);
 
       bool isInMap = gridModel.GetIsInMap(oldParent.name);
 

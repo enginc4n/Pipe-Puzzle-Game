@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 
 namespace Script.Runtime.Context.Game.Scripts.View.PipeSpawn
 {
-  public class PipeSpawnView : EventView
+  public class PipeSlotView : EventView
   {
     [Header("Pipe Spawn Settings")]
     [SerializeField]
@@ -38,22 +38,10 @@ namespace Script.Runtime.Context.Game.Scripts.View.PipeSpawn
       return promise;
     }
 
-    public IPromise CreateRandomPipe(Transform parent)
+    public void CreateRandomPipe(Transform parent)
     {
-      Promise promise = new();
       int randomNumber = Random.Range(0, pipePrefab.Count);
       GameObject pipe = Instantiate(pipePrefab[randomNumber], parent);
-
-      if (pipe != null)
-      {
-        promise.Resolve();
-      }
-      else
-      {
-        promise.Reject(new SystemException("Pipe is not created properly."));
-      }
-
-      return promise;
     }
 
     public int GetPipeSpawnCount()
