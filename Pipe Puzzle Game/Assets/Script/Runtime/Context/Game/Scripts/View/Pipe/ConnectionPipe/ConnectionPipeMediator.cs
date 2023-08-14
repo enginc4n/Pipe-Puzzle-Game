@@ -10,7 +10,8 @@ namespace Script.Runtime.Context.Game.Scripts.View.Pipe.ConnectionPipe
   {
     PipeMoved,
     PipeRotated,
-    PipeConnected
+    PipeConnected,
+    PipeDisconnected
   }
 
   public class ConnectionPipeMediator : EventMediator
@@ -26,6 +27,15 @@ namespace Script.Runtime.Context.Game.Scripts.View.Pipe.ConnectionPipe
       view.dispatcher.AddListener(ConnectionPipeEvents.PipeMoved, OnPipeMoved);
       view.dispatcher.AddListener(ConnectionPipeEvents.PipeRotated, OnPipeRotated);
       view.dispatcher.AddListener(ConnectionPipeEvents.PipeConnected, OnPipeConnected);
+      view.dispatcher.AddListener(ConnectionPipeEvents.PipeDisconnected, OnPipeDisconnected);
+    }
+
+    private void OnPipeDisconnected()
+    {
+      string position = view.GetPosition();
+      gridModel.SetIsHaveWater(position, false);
+
+      ChangeColorByWater(position);
     }
 
     private void OnPipeConnected(IEvent evt)
@@ -36,28 +46,55 @@ namespace Script.Runtime.Context.Game.Scripts.View.Pipe.ConnectionPipe
         return;
       }
 
-      if (hitPipe.transform.CompareTag("Start"))
+      string position = view.GetPosition();
+      string hitPipePosition = hitPipe.transform.parent.name;
+      bool isHaveWater = gridModel.GetIsHaveWater(hitPipePosition);
+      view.ChangePipeColor(isHaveWater);
+      gridModel.SetIsHaveWater(position, isHaveWater);
+      if (hitPipe.CompareTag("Finish"))
       {
-        Debug.LogError("Get WATER");
+        CheckWin();
+      }
+    }
+
+    private void CheckWin()
+    {
+      Debug.LogError("CheckWin");
+      string position = view.GetPosition();
+      bool isHaveWater = gridModel.GetIsHaveWater(position);
+      if (!isHaveWater)
+      {
+        return;
       }
 
-      ConnectionPipeView connectionPipeView = hitPipe.GetComponent<ConnectionPipeView>();
-
-      if (connectionPipeView != null)
-      {
-        connectionPipeView.SendRay();
-      }
+      Debug.LogError("Win");
+      dispatcher.Dispatch(GameEvents.GameFinished);
     }
 
     private void OnPipeRotated()
     {
-      dispatcher.Dispatch(PipeEvents.PipeRotated);
+      view.SendRay().Then(() =>
+      {
+        string position = view.GetPosition();
+        ChangeColorByWater(position);
+      });
     }
 
     private void OnPipeMoved(IEvent evt)
     {
-      Transform oldParent = evt.data as Transform;
-      dispatcher.Dispatch(PipeEvents.PipeMoved, oldParent);
+      view.SendRay().Then(() =>
+      {
+        string position = view.GetPosition();
+        ChangeColorByWater(position);
+        Transform oldParent = evt.data as Transform;
+        dispatcher.Dispatch(PipeEvents.PipeMoved, oldParent);
+      });
+    }
+
+    private void ChangeColorByWater(string pos)
+    {
+      bool isHaveWater = gridModel.GetIsHaveWater(pos);
+      view.ChangePipeColor(isHaveWater);
     }
 
     public override void OnRemove()
@@ -65,6 +102,7 @@ namespace Script.Runtime.Context.Game.Scripts.View.Pipe.ConnectionPipe
       view.dispatcher.RemoveListener(ConnectionPipeEvents.PipeMoved, OnPipeMoved);
       view.dispatcher.RemoveListener(ConnectionPipeEvents.PipeRotated, OnPipeRotated);
       view.dispatcher.RemoveListener(ConnectionPipeEvents.PipeConnected, OnPipeConnected);
+      view.dispatcher.RemoveListener(ConnectionPipeEvents.PipeDisconnected, OnPipeConnected);
     }
   }
 }

@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using Scripts.Runtime.Modules.Core.PromiseTool;
 using strange.extensions.mediation.impl;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace Script.Runtime.Context.Game.Scripts.View.Pipe.ConnectionPipe
 {
@@ -66,37 +68,60 @@ namespace Script.Runtime.Context.Game.Scripts.View.Pipe.ConnectionPipe
         return;
       }
 
-      dispatcher.Dispatch(ConnectionPipeEvents.PipeRotated);
       transform.Rotate(0f, 0f, 90f);
+      dispatcher.Dispatch(ConnectionPipeEvents.PipeRotated);
     }
 
-    public void SendRay()
+    public IPromise SendRay()
     {
       int targetMask = LayerMask.NameToLayer("Pipe");
 
       float distance = _rectTransform.rect.height / 4f;
 
+      int count = connections.Count;
+      int counter = 0;
+
       foreach (Transform connect in connections)
       {
-        if (connections == null)
-        {
-          Debug.LogWarning("Connections are empty");
-          return;
-        }
-
         Vector3 direction = connect.transform.up;
         Vector3 startPoint = connect.position + direction * distance;
         RaycastHit2D hit = Physics2D.Raycast(startPoint, direction, distance, -targetMask); // burada neden eksi yazıyorum anlamadım eksi olmadan ters çalışıyor.
+        Debug.DrawLine(startPoint, startPoint + direction * distance, Color.yellow, 1f);
 
         if (!hit)
+        {
+          counter++;
+
+          if (counter >= count)
+          {
+            dispatcher.Dispatch(ConnectionPipeEvents.PipeDisconnected);
+          }
+
+          continue;
+        }
+
+        GameObject hitPipe = hit.transform.gameObject;
+
+        if (hitPipe == gameObject)
         {
           continue;
         }
 
-        Debug.DrawLine(startPoint, startPoint + direction * distance, Color.red, 1f);
-        GameObject hitPipe = hit.collider.gameObject;
         dispatcher.Dispatch(ConnectionPipeEvents.PipeConnected, hitPipe);
       }
+
+      return Promise.Resolved();
+    }
+
+    public void ChangePipeColor(bool isHaveWater)
+    {
+      Image image = gameObject.GetComponent<Image>();
+      image.color = isHaveWater ? Color.blue : Color.white;
+    }
+
+    public string GetPosition()
+    {
+      return transform.parent.name;
     }
   }
 }

@@ -3,6 +3,6 @@
   public enum GameEvents
   {
     GameMenuPanelOpened,
-    PipePositionChanged
+    GameFinished
   }
 }
