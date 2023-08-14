@@ -5,7 +5,7 @@ using strange.extensions.mediation.impl;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Script.Runtime.Context.Game.Scripts.View.PipeSpawn
+namespace Script.Runtime.Context.Game.Scripts.View.PipeSlot
 {
   public class PipeSlotView : EventView
   {
@@ -41,7 +41,7 @@ namespace Script.Runtime.Context.Game.Scripts.View.PipeSpawn
     public void CreateRandomPipe(Transform parent)
     {
       int randomNumber = Random.Range(0, pipePrefab.Count);
-      GameObject pipe = Instantiate(pipePrefab[randomNumber], parent);
+      Instantiate(pipePrefab[randomNumber], parent);
     }
 
     public int GetPipeSpawnCount()

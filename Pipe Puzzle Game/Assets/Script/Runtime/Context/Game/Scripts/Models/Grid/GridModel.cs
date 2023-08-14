@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Script.Runtime.Context.Game.Scripts.Enums;
 using Script.Runtime.Context.Game.Scripts.Vo;
 using Scripts.Runtime.Modules.Core.PromiseTool;
 using strange.extensions.context.api;
@@ -35,9 +34,9 @@ namespace Script.Runtime.Context.Game.Scripts.Models.Grid
         {
           GridVo gridVo = new()
           {
-            pipeType = PipeType.None,
             isOccupied = false,
-            position = new Vector2(x, y)
+            position = new Vector2(x, y),
+            isHaveWater = false
           };
           _gridMap.Add($"{x},{y}", gridVo);
         }
@@ -81,34 +80,24 @@ namespace Script.Runtime.Context.Game.Scripts.Models.Grid
       return _gridMap.ContainsKey(position);
     }
 
-    public void SetPipeType(string position, PipeType pipeType)
+    public void SetIsHaveWater(string position, bool isWater)
     {
       if (!_gridMap.ContainsKey(position))
       {
         return;
       }
 
-      _gridMap[position].pipeType = pipeType;
+      _gridMap[position].isHaveWater = isWater;
     }
 
-    public PipeType GetPipeType(string position)
+    public bool GetIsHaveWater(string position)
     {
       if (!_gridMap.ContainsKey(position))
       {
-        return PipeType.None;
+        return false;
       }
 
-      return _gridMap[position].pipeType;
-    }
-
-    public Vector2 GetPosition(string position)
-    {
-      if (!_gridMap.ContainsKey(position))
-      {
-        return Vector2.zero;
-      }
-
-      return _gridMap[position].position;
+      return _gridMap[position].isHaveWater;
     }
   }
 }

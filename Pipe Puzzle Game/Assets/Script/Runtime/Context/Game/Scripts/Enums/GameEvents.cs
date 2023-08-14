@@ -3,8 +3,6 @@
   public enum GameEvents
   {
     GameMenuPanelOpened,
-    ObjectPositionChanged,
-    ItemSlotFilled,
-    GameBoardReady
+    PipePositionChanged
   }
 }

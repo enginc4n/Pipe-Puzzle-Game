@@ -1,5 +1,4 @@
 ﻿using System;
-using Script.Runtime.Context.Game.Scripts.Enums;
 using UnityEngine;
 
 namespace Script.Runtime.Context.Game.Scripts.Vo
@@ -9,8 +8,8 @@ namespace Script.Runtime.Context.Game.Scripts.Vo
   {
     public Vector2 position;
 
-    public PipeType pipeType;
-
     public bool isOccupied;
+
+    public bool isHaveWater;
   }
 }

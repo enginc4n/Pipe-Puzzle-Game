@@ -7,8 +7,9 @@ using Script.Runtime.Context.Game.Scripts.View.GameBoard;
 using Script.Runtime.Context.Game.Scripts.View.GameMenuPanel;
 using Script.Runtime.Context.Game.Scripts.View.ItemSlot;
 using Script.Runtime.Context.Game.Scripts.View.MainMenuPanel;
-using Script.Runtime.Context.Game.Scripts.View.Pipe;
-using Script.Runtime.Context.Game.Scripts.View.PipeSpawn;
+using Script.Runtime.Context.Game.Scripts.View.Pipe.ConnectionPipe;
+using Script.Runtime.Context.Game.Scripts.View.Pipe.StartPipe;
+using Script.Runtime.Context.Game.Scripts.View.PipeSlot;
 using strange.extensions.context.api;
 using strange.extensions.context.impl;
 using UnityEngine;
@@ -31,17 +32,18 @@ namespace Script.Runtime.Context.Game.Scripts.Config
 
       injectionBinder.Bind<IGridModel>().To<GridModel>().ToSingleton();
       injectionBinder.Bind<IGameModel>().To<GameModel>().ToSingleton();
+      injectionBinder.Bind<GameControlFacade>().To<GameControlFacade>().ToSingleton();
 
-      mediationBinder.Bind<PipeView>().To<PipeMediator>();
+      mediationBinder.Bind<ConnectionPipeView>().To<ConnectionPipeMediator>();
       mediationBinder.Bind<ItemSlotView>().To<ItemSlotMediator>();
       mediationBinder.Bind<BackgroundScrollerView>().To<BackgroundScrollerMediator>();
       mediationBinder.Bind<MainMenuPanelView>().To<MainMenuPanelMediator>();
       mediationBinder.Bind<GameMenuPanelView>().To<GameMenuPanelMediator>();
       mediationBinder.Bind<GameBoardView>().To<GameBoardMediator>();
       mediationBinder.Bind<PipeSlotView>().To<PipeSlotMediator>();
+      mediationBinder.Bind<StartPipeView>().To<StartPipeMediator>();
 
-      commandBinder.Bind(GameEvents.ObjectPositionChanged)
-        .To<ObjectPositionChangedCommand>();
+      commandBinder.Bind(PipeEvents.PipeMoved).To<PipePositionChangedCommand>();
     }
   }
 }

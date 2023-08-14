@@ -1,4 +1,5 @@
-﻿using strange.extensions.mediation.impl;
+﻿using Script.Runtime.Context.Game.Scripts.View.Pipe.ConnectionPipe;
+using strange.extensions.mediation.impl;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -33,6 +34,9 @@ namespace Script.Runtime.Context.Game.Scripts.View.ItemSlot
 
       BoxCollider2D droppedItemBoxCollider2D = droppedItem.GetComponent<BoxCollider2D>();
       droppedItemBoxCollider2D.size = _itemSlotRectTransform.sizeDelta;
+
+      ConnectionPipeView droppedItemConnectionPipeView = droppedItem.GetComponent<ConnectionPipeView>();
+      droppedItemConnectionPipeView.rotatable = true;
     }
 
     public string GetPosition()

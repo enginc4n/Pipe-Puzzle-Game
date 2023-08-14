@@ -41,6 +41,8 @@ namespace Script.Runtime.Context.Game.Scripts.View.GameBoard
     private Rect _gameBoardRect;
     private GridLayoutGroup _gridLayoutGroup;
 
+    private const string ItemSlotKey = "ItemSlot";
+
     protected override void Awake()
     {
       base.Awake();
@@ -90,7 +92,7 @@ namespace Script.Runtime.Context.Game.Scripts.View.GameBoard
     private IPromise CreateItemSlots(int x, int y)
     {
       Promise promise = new();
-      AsyncOperationHandle<GameObject> asyncOperationHandle = Addressables.InstantiateAsync("ItemSlot", container.transform);
+      AsyncOperationHandle<GameObject> asyncOperationHandle = Addressables.InstantiateAsync(ItemSlotKey, container.transform);
       asyncOperationHandle.Completed += handle =>
       {
         if (asyncOperationHandle.Status == AsyncOperationStatus.Succeeded)
@@ -111,20 +113,40 @@ namespace Script.Runtime.Context.Game.Scripts.View.GameBoard
       return promise;
     }
 
-    public void CreateStarterPipes()
+    public void CreateStartPipe()
     {
       Transform startPipeTransform = container.transform.GetChild(0);
       GameObject startPipe = Instantiate(startPipePrefab, startPipeTransform);
+
       startPipe.name = "StartPipe";
+
+      RectTransform pipeRectTransform = startPipe.GetComponent<RectTransform>();
+      pipeRectTransform.sizeDelta = CalculateItemSlotSize();
+
+      BoxCollider2D pipeBoxCollider2D = startPipe.GetComponent<BoxCollider2D>();
+      pipeBoxCollider2D.size = CalculateItemSlotSize();
+
+      Image pipeImage = startPipe.GetComponent<Image>();
+      pipeImage.color = Color.blue;
+
       dispatcher.Dispatch(GameBoardEvents.StarterPipesCreated, startPipe);
     }
 
-    public void CreateEndPipes()
+    public void CreateEndPipe()
     {
       Transform endPipeTransform = container.transform.GetChild(container.transform.childCount - 1);
       GameObject endPipe = Instantiate(endPipePrefab, endPipeTransform);
+
       endPipe.name = "EndPipe";
+
+      RectTransform pipeRectTransform = endPipe.GetComponent<RectTransform>();
+      pipeRectTransform.sizeDelta = CalculateItemSlotSize();
+
+      BoxCollider2D pipeBoxCollider2D = endPipe.GetComponent<BoxCollider2D>();
+      pipeBoxCollider2D.size = CalculateItemSlotSize();
+
       endPipe.transform.Rotate(0, 0, 180);
+
       dispatcher.Dispatch(GameBoardEvents.StarterPipesCreated, endPipe);
     }
 
@@ -141,8 +163,8 @@ namespace Script.Runtime.Context.Game.Scripts.View.GameBoard
 
       Promise.All(promises).Then(() =>
       {
-        CreateStarterPipes();
-        CreateEndPipes();
+        CreateStartPipe();
+        CreateEndPipe();
       });
     }
 

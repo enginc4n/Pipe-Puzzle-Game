@@ -677,7 +677,10 @@ MonoBehaviour:
   pipeSpawnCount: 2
   spawnSlotPrefab: {fileID: 4963965110348348212, guid: 6ad723d93202b8144a4750ab518c41f3, type: 3}
   pipePrefab:
+  - {fileID: 6897339357759270965, guid: 21c5e9abe357b354f969480f959b1d16, type: 3}
   - {fileID: 6897339357759270965, guid: 44c664c7b51f2f841b548a45779d5f7d, type: 3}
+  - {fileID: 6897339357759270965, guid: 6087d93a9bb62c64fa145b8af2ff4d2c, type: 3}
+  - {fileID: 6897339357759270965, guid: 4e61461e9ddb9534abab7ef2b0913a4f, type: 3}
 --- !u!114 &940954883
 MonoBehaviour:
   m_ObjectHideFlags: 0

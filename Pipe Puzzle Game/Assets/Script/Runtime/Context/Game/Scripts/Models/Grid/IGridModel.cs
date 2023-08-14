@@ -1,6 +1,4 @@
-﻿using Script.Runtime.Context.Game.Scripts.Enums;
-using Scripts.Runtime.Modules.Core.PromiseTool;
-using UnityEngine;
+﻿using Scripts.Runtime.Modules.Core.PromiseTool;
 
 namespace Script.Runtime.Context.Game.Scripts.Models.Grid
 {
@@ -14,10 +12,8 @@ namespace Script.Runtime.Context.Game.Scripts.Models.Grid
 
     bool GetIsInMap(string position);
 
-    PipeType GetPipeType(string position);
+    void SetIsHaveWater(string position, bool isWater);
 
-    void SetPipeType(string position, PipeType pipeType);
-
-    Vector2 GetPosition(string position);
+    bool GetIsHaveWater(string position);
   }
 }

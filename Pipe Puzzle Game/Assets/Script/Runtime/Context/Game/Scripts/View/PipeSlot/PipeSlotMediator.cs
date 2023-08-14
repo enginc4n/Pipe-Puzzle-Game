@@ -3,7 +3,7 @@ using strange.extensions.dispatcher.eventdispatcher.api;
 using strange.extensions.mediation.impl;
 using UnityEngine;
 
-namespace Script.Runtime.Context.Game.Scripts.View.PipeSpawn
+namespace Script.Runtime.Context.Game.Scripts.View.PipeSlot
 {
   public enum PipeSpawnEvents
   {

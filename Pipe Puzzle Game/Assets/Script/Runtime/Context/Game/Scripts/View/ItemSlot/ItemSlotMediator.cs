@@ -1,6 +1,4 @@
-﻿using Script.Runtime.Context.Game.Scripts.Enums;
-using Script.Runtime.Context.Game.Scripts.Models.Grid;
-using Script.Runtime.Context.Game.Scripts.View.Pipe;
+﻿using Script.Runtime.Context.Game.Scripts.Models.Grid;
 using strange.extensions.dispatcher.eventdispatcher.api;
 using strange.extensions.mediation.impl;
 using UnityEngine;
@@ -34,7 +32,6 @@ namespace Script.Runtime.Context.Game.Scripts.View.ItemSlot
       }
 
       string position = view.GetPosition();
-      PipeType pipeType = droppedObject.GetComponent<PipeView>().pipeType;
 
       bool isOccupied = gridModel.GetIsOccupied(position);
       if (isOccupied)
@@ -43,7 +40,6 @@ namespace Script.Runtime.Context.Game.Scripts.View.ItemSlot
       }
 
       gridModel.SetIsOccupied(position, true);
-      gridModel.SetPipeType(position, pipeType);
       view.SetItem(droppedObject);
     }
 
