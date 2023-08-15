@@ -78,8 +78,8 @@ namespace Script.Runtime.Context.Game.Scripts.View.Pipe.ConnectionPipe
 
       float distance = _rectTransform.rect.height / 4f;
 
-      int count = connections.Count;
-      int counter = 0;
+      int connectionsCount = connections.Count;
+      int emptyHitCount = 0;
 
       foreach (Transform connect in connections)
       {
@@ -90,9 +90,9 @@ namespace Script.Runtime.Context.Game.Scripts.View.Pipe.ConnectionPipe
 
         if (!hit)
         {
-          counter++;
+          emptyHitCount++;
 
-          if (counter >= count)
+          if (emptyHitCount >= connectionsCount)
           {
             dispatcher.Dispatch(ConnectionPipeEvents.PipeDisconnected);
           }
@@ -110,7 +110,8 @@ namespace Script.Runtime.Context.Game.Scripts.View.Pipe.ConnectionPipe
         dispatcher.Dispatch(ConnectionPipeEvents.PipeConnected, hitPipe);
       }
 
-      return Promise.Resolved();
+      return
+        Promise.Resolved();
     }
 
     public void ChangePipeColor(bool isHaveWater)

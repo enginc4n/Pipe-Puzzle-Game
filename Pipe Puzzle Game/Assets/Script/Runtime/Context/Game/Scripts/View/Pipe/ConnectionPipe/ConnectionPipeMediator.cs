@@ -34,7 +34,6 @@ namespace Script.Runtime.Context.Game.Scripts.View.Pipe.ConnectionPipe
     {
       string position = view.GetPosition();
       gridModel.SetIsHaveWater(position, false);
-
       ChangeColorByWater(position);
     }
 
@@ -46,49 +45,36 @@ namespace Script.Runtime.Context.Game.Scripts.View.Pipe.ConnectionPipe
         return;
       }
 
-      string position = view.GetPosition();
       string hitPipePosition = hitPipe.transform.parent.name;
       bool isHaveWater = gridModel.GetIsHaveWater(hitPipePosition);
       view.ChangePipeColor(isHaveWater);
-      gridModel.SetIsHaveWater(position, isHaveWater);
-      if (hitPipe.CompareTag("Finish"))
-      {
-        CheckWin();
-      }
-    }
 
-    private void CheckWin()
-    {
-      Debug.LogError("CheckWin");
       string position = view.GetPosition();
-      bool isHaveWater = gridModel.GetIsHaveWater(position);
-      if (!isHaveWater)
-      {
-        return;
-      }
-
-      Debug.LogError("Win");
-      dispatcher.Dispatch(GameEvents.GameFinished);
+      gridModel.SetIsHaveWater(position, isHaveWater);
     }
 
     private void OnPipeRotated()
     {
-      view.SendRay().Then(() =>
-      {
-        string position = view.GetPosition();
-        ChangeColorByWater(position);
-      });
+      string position = view.GetPosition();
+
+      view.SendRay()
+        .Then(() =>
+        {
+          ChangeColorByWater(position);
+        });
     }
 
     private void OnPipeMoved(IEvent evt)
     {
-      view.SendRay().Then(() =>
-      {
-        string position = view.GetPosition();
-        ChangeColorByWater(position);
-        Transform oldParent = evt.data as Transform;
-        dispatcher.Dispatch(PipeEvents.PipeMoved, oldParent);
-      });
+      string position = view.GetPosition();
+      view.SendRay()
+        .Then(() =>
+        {
+          Transform oldParent = evt.data as Transform;
+          dispatcher.Dispatch(PipeEvents.PipeMoved, oldParent);
+
+          ChangeColorByWater(position);
+        });
     }
 
     private void ChangeColorByWater(string pos)
@@ -102,7 +88,7 @@ namespace Script.Runtime.Context.Game.Scripts.View.Pipe.ConnectionPipe
       view.dispatcher.RemoveListener(ConnectionPipeEvents.PipeMoved, OnPipeMoved);
       view.dispatcher.RemoveListener(ConnectionPipeEvents.PipeRotated, OnPipeRotated);
       view.dispatcher.RemoveListener(ConnectionPipeEvents.PipeConnected, OnPipeConnected);
-      view.dispatcher.RemoveListener(ConnectionPipeEvents.PipeDisconnected, OnPipeConnected);
+      view.dispatcher.RemoveListener(ConnectionPipeEvents.PipeDisconnected, OnPipeDisconnected);
     }
   }
 }
