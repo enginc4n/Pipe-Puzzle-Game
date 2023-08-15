@@ -49,6 +49,7 @@ GameObject:
   - component: {fileID: 3809454253450166190}
   - component: {fileID: 2428207334501149710}
   - component: {fileID: 4115160630391042150}
+  - component: {fileID: 887583055348193959}
   m_Layer: 6
   m_Name: Start Pipe
   m_TagString: Start
@@ -153,3 +154,19 @@ CanvasGroup:
   m_Interactable: 0
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &887583055348193959
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6897339357759270965}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2dd8c406aa14584b1215df9d5488587, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  alpha: 0
+  connections:
+  - {fileID: 6407506769736595997}
+  rotatable: 0

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Scripts.Runtime.Modules.Core.PromiseTool;
 using strange.extensions.mediation.impl;
 using UnityEngine;
@@ -72,7 +73,7 @@ namespace Script.Runtime.Context.Game.Scripts.View.Pipe.ConnectionPipe
       dispatcher.Dispatch(ConnectionPipeEvents.PipeRotated);
     }
 
-    public IPromise SendRay()
+    public IPromise CheckIsTouching()
     {
       int targetMask = LayerMask.NameToLayer("Pipe");
 
@@ -80,6 +81,11 @@ namespace Script.Runtime.Context.Game.Scripts.View.Pipe.ConnectionPipe
 
       int connectionsCount = connections.Count;
       int emptyHitCount = 0;
+
+      if (connectionsCount == 0)
+      {
+        return Promise.Rejected(new Exception("Connections Are Empty"));
+      }
 
       foreach (Transform connect in connections)
       {
@@ -94,7 +100,7 @@ namespace Script.Runtime.Context.Game.Scripts.View.Pipe.ConnectionPipe
 
           if (emptyHitCount >= connectionsCount)
           {
-            dispatcher.Dispatch(ConnectionPipeEvents.PipeDisconnected);
+            dispatcher.Dispatch(ConnectionPipeEvents.PipeNotTouched);
           }
 
           continue;
@@ -107,11 +113,10 @@ namespace Script.Runtime.Context.Game.Scripts.View.Pipe.ConnectionPipe
           continue;
         }
 
-        dispatcher.Dispatch(ConnectionPipeEvents.PipeConnected, hitPipe);
+        dispatcher.Dispatch(ConnectionPipeEvents.PipeTouched, hitPipe);
       }
 
-      return
-        Promise.Resolved();
+      return Promise.Resolved(); // Nasıl yapacağınmı bilemedim ayırmayı ondan ayıramadım.
     }
 
     public void ChangePipeColor(bool isHaveWater)
@@ -123,6 +128,41 @@ namespace Script.Runtime.Context.Game.Scripts.View.Pipe.ConnectionPipe
     public string GetPosition()
     {
       return transform.parent.name;
+    }
+
+    public void CheckIsTouched(GameObject target)
+    {
+      int targetMask = LayerMask.NameToLayer("Pipe");
+
+      float distance = _rectTransform.rect.height / 4f;
+
+      int connectionCount = connections.Count;
+      if (connectionCount == 0)
+      {
+        Debug.LogWarning("Connections Are EMPTY");
+      }
+
+      foreach (Transform connect in connections)
+      {
+        Vector3 direction = connect.transform.up;
+        Vector3 startPoint = connect.position + direction * distance;
+        RaycastHit2D hit = Physics2D.Raycast(startPoint, direction, distance, -targetMask); // burada neden eksi yazıyorum anlamadım eksi olmadan ters çalışıyor.
+        Debug.DrawLine(startPoint, startPoint + direction * distance, Color.yellow, 1f);
+
+        if (!hit)
+        {
+          continue;
+        }
+
+        GameObject hitPipe = hit.transform.gameObject;
+
+        if (hitPipe != target)
+        {
+          continue;
+        }
+
+        dispatcher.Dispatch(ConnectionPipeEvents.PipeConnected, hitPipe);
+      }
     }
   }
 }

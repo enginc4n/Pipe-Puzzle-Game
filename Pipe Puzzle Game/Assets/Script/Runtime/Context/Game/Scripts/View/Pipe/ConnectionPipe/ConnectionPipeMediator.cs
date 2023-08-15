@@ -10,8 +10,9 @@ namespace Script.Runtime.Context.Game.Scripts.View.Pipe.ConnectionPipe
   {
     PipeMoved,
     PipeRotated,
-    PipeConnected,
-    PipeDisconnected
+    PipeTouched,
+    PipeNotTouched,
+    PipeConnected
   }
 
   public class ConnectionPipeMediator : EventMediator
@@ -26,18 +27,53 @@ namespace Script.Runtime.Context.Game.Scripts.View.Pipe.ConnectionPipe
     {
       view.dispatcher.AddListener(ConnectionPipeEvents.PipeMoved, OnPipeMoved);
       view.dispatcher.AddListener(ConnectionPipeEvents.PipeRotated, OnPipeRotated);
+      view.dispatcher.AddListener(ConnectionPipeEvents.PipeTouched, OnPipeTouched);
+      view.dispatcher.AddListener(ConnectionPipeEvents.PipeNotTouched, OnPipeNotTouched);
       view.dispatcher.AddListener(ConnectionPipeEvents.PipeConnected, OnPipeConnected);
-      view.dispatcher.AddListener(ConnectionPipeEvents.PipeDisconnected, OnPipeDisconnected);
     }
 
-    private void OnPipeDisconnected()
+    private void OnPipeConnected(IEvent evt)
+    {
+      GameObject originalPipe = evt.data as GameObject;
+      if (originalPipe == null)
+      {
+        return;
+      }
+
+      ConnectionPipeView connectionPipeView = originalPipe.GetComponent<ConnectionPipeView>();
+      if (connectionPipeView == null)
+      {
+        Debug.LogError("Connection Pipe View not Found");
+        return;
+      }
+
+      string originalPos = connectionPipeView.GetPosition();
+      bool isHaveWaterInOriginalPipe = gridModel.GetIsHaveWater(originalPos);
+
+      if (!isHaveWaterInOriginalPipe)
+      {
+        string hitPipePos = view.GetPosition();
+        bool isHaveWaterInHitPipe = gridModel.GetIsHaveWater(hitPipePos);
+        gridModel.SetIsHaveWater(originalPos, isHaveWaterInHitPipe);
+        connectionPipeView.ChangePipeColor(isHaveWaterInHitPipe);
+      }
+      else
+      {
+        string hitPipePos = view.GetPosition();
+        bool isHaveWater = gridModel.GetIsHaveWater(originalPos);
+        gridModel.SetIsHaveWater(hitPipePos, isHaveWater);
+        view.ChangePipeColor(isHaveWater);
+      }
+    }
+
+    private void OnPipeNotTouched()
     {
       string position = view.GetPosition();
       gridModel.SetIsHaveWater(position, false);
       ChangeColorByWater(position);
     }
 
-    private void OnPipeConnected(IEvent evt)
+    private void OnPipeTouched(IEvent evt)
     {
       GameObject hitPipe = evt.data as GameObject;
       if (hitPipe == null)
@@ -45,35 +81,45 @@ namespace Script.Runtime.Context.Game.Scripts.View.Pipe.ConnectionPipe
         return;
       }
 
-      string hitPipePosition = hitPipe.transform.parent.name;
-      bool isHaveWater = gridModel.GetIsHaveWater(hitPipePosition);
-      view.ChangePipeColor(isHaveWater);
+      ConnectionPipeView connectionPipeView = hitPipe.GetComponent<ConnectionPipeView>();
+      if (connectionPipeView == null)
+      {
+        Debug.LogError("Null geldi connection Pipe view OnPipeTouch'da");
+        return;
+      }
 
-      string position = view.GetPosition();
-      gridModel.SetIsHaveWater(position, isHaveWater);
+      connectionPipeView.CheckIsTouched(gameObject);
     }
 
     private void OnPipeRotated()
     {
       string position = view.GetPosition();
 
-      view.SendRay()
+      view.CheckIsTouching()
         .Then(() =>
         {
           ChangeColorByWater(position);
+        })
+        .Catch(exception =>
+        {
+          Debug.LogWarning("Ex: " + exception);
         });
     }
 
     private void OnPipeMoved(IEvent evt)
     {
       string position = view.GetPosition();
-      view.SendRay()
+      view.CheckIsTouching()
         .Then(() =>
         {
           Transform oldParent = evt.data as Transform;
           dispatcher.Dispatch(PipeEvents.PipeMoved, oldParent);
 
           ChangeColorByWater(position);
+        })
+        .Catch(exception =>
+        {
+          Debug.LogWarning("Ex: " + exception);
         });
     }
 
@@ -87,8 +133,9 @@ namespace Script.Runtime.Context.Game.Scripts.View.Pipe.ConnectionPipe
     {
       view.dispatcher.RemoveListener(ConnectionPipeEvents.PipeMoved, OnPipeMoved);
       view.dispatcher.RemoveListener(ConnectionPipeEvents.PipeRotated, OnPipeRotated);
+      view.dispatcher.RemoveListener(ConnectionPipeEvents.PipeTouched, OnPipeTouched);
+      view.dispatcher.RemoveListener(ConnectionPipeEvents.PipeNotTouched, OnPipeNotTouched);
       view.dispatcher.RemoveListener(ConnectionPipeEvents.PipeConnected, OnPipeConnected);
-      view.dispatcher.RemoveListener(ConnectionPipeEvents.PipeDisconnected, OnPipeDisconnected);
     }
   }
 }
