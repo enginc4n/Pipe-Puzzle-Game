@@ -44,10 +44,14 @@ namespace Script.Runtime.Context.Game.Scripts.View.Pipe.EndPipe
 
       string hitPipePos = connectionPipeView.GetPosition();
       bool isHaveWater = gridModel.GetIsHaveWater(hitPipePos);
-      if (isHaveWater)
+      if (!isHaveWater)
       {
-        dispatcher.Dispatch(GameEvents.GameFinished);
+        return;
       }
+
+      view.ChangeColorToBlue();
+      Debug.LogError("Game Finished");
+      dispatcher.Dispatch(GameEvents.GameFinished);
     }
 
     private void OnSendRay()

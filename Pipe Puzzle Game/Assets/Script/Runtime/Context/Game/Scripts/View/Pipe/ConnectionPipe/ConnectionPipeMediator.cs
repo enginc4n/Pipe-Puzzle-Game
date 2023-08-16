@@ -30,6 +30,16 @@ namespace Script.Runtime.Context.Game.Scripts.View.Pipe.ConnectionPipe
       view.dispatcher.AddListener(ConnectionPipeEvents.PipeTouched, OnPipeTouched);
       view.dispatcher.AddListener(ConnectionPipeEvents.PipeNotTouched, OnPipeNotTouched);
       view.dispatcher.AddListener(ConnectionPipeEvents.PipeConnected, OnPipeConnected);
+
+      dispatcher.AddListener(GameEvents.GameFinished, OnGameFinished);
+    }
+
+    private void OnGameFinished()
+    {
+      if (view.rotatable)
+      {
+        view.rotatable = false;
+      }
     }
 
     private void OnPipeConnected(IEvent evt)
@@ -101,11 +111,9 @@ namespace Script.Runtime.Context.Game.Scripts.View.Pipe.ConnectionPipe
           continue;
         }
 
-        string position = pipeView.GetPosition();
         pipeView.CheckIsTouching()
           .Then(() =>
           {
-            ChangeColorByWater(position);
             dispatcher.Dispatch(PipeEvents.PipeRotated);
           })
           .Catch(exception =>
@@ -145,6 +153,8 @@ namespace Script.Runtime.Context.Game.Scripts.View.Pipe.ConnectionPipe
       view.dispatcher.RemoveListener(ConnectionPipeEvents.PipeTouched, OnPipeTouched);
       view.dispatcher.RemoveListener(ConnectionPipeEvents.PipeNotTouched, OnPipeNotTouched);
       view.dispatcher.RemoveListener(ConnectionPipeEvents.PipeConnected, OnPipeConnected);
+
+      dispatcher.RemoveListener(GameEvents.GameFinished, OnGameFinished);
     }
   }
 }

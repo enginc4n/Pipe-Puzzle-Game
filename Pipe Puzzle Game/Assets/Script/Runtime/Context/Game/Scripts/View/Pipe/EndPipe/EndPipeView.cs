@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using strange.extensions.mediation.impl;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Script.Runtime.Context.Game.Scripts.View.Pipe.EndPipe
 {
@@ -11,10 +12,13 @@ namespace Script.Runtime.Context.Game.Scripts.View.Pipe.EndPipe
 
     private RectTransform _rectTransform;
 
+    private Image _image;
+
     protected override void Awake()
     {
       base.Awake();
       _rectTransform = GetComponent<RectTransform>();
+      _image = GetComponent<Image>();
     }
 
     public void CheckIsTouched()
@@ -45,6 +49,11 @@ namespace Script.Runtime.Context.Game.Scripts.View.Pipe.EndPipe
 
         dispatcher.Dispatch(EndPipeEvents.HitPipe, hitPipe);
       }
+    }
+
+    public void ChangeColorToBlue()
+    {
+      _image.color = Color.blue;
     }
   }
 }

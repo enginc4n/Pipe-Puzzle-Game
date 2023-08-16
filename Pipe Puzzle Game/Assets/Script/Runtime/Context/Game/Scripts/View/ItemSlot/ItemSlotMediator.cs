@@ -36,7 +36,6 @@ namespace Script.Runtime.Context.Game.Scripts.View.ItemSlot
         gridModel.SetIsOccupied(position, true);
       }
 
-      Debug.LogError("Game Finished" + position);
     }
 
     private void OnItemPlaced(IEvent evt)
