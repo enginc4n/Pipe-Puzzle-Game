@@ -1,4 +1,5 @@
-﻿using Script.Runtime.Context.Game.Scripts.Models.Grid;
+﻿using Script.Runtime.Context.Game.Scripts.Enums;
+using Script.Runtime.Context.Game.Scripts.Models.Grid;
 using strange.extensions.dispatcher.eventdispatcher.api;
 using strange.extensions.mediation.impl;
 using UnityEngine;
@@ -21,6 +22,21 @@ namespace Script.Runtime.Context.Game.Scripts.View.ItemSlot
     public override void OnRegister()
     {
       view.dispatcher.AddListener(ItemSlotEvents.ItemSlotFilled, OnItemPlaced);
+
+      dispatcher.AddListener(GameEvents.GameFinished, OnGameFinished);
+    }
+
+    private void OnGameFinished()
+    {
+      string position = view.GetPosition();
+      bool isOccupied = gridModel.GetIsOccupied(position);
+
+      if (!isOccupied)
+      {
+        gridModel.SetIsOccupied(position, true);
+      }
+
+      Debug.LogError("Game Finished" + position);
     }
 
     private void OnItemPlaced(IEvent evt)
@@ -46,6 +62,8 @@ namespace Script.Runtime.Context.Game.Scripts.View.ItemSlot
     public override void OnRemove()
     {
       view.dispatcher.RemoveListener(ItemSlotEvents.ItemSlotFilled, OnItemPlaced);
+
+      dispatcher.RemoveListener(GameEvents.GameFinished, OnGameFinished);
     }
   }
 }

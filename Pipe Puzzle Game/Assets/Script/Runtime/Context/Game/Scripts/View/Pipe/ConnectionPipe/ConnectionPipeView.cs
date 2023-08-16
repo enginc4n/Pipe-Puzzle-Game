@@ -10,7 +10,7 @@ namespace Script.Runtime.Context.Game.Scripts.View.Pipe.ConnectionPipe
 {
   public class ConnectionPipeView : EventView, IBeginDragHandler, IEndDragHandler, IDragHandler, IPointerClickHandler
   {
-    [Header("Settings For Draggable Objects")]
+    [Header("Settings For Objects")]
     [SerializeField]
     private float alpha;
 

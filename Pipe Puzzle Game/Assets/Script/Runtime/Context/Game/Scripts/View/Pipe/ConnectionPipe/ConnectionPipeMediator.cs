@@ -93,17 +93,26 @@ namespace Script.Runtime.Context.Game.Scripts.View.Pipe.ConnectionPipe
 
     private void OnPipeRotated()
     {
-      string position = view.GetPosition();
+      ConnectionPipeView[] connectionPipeViews = FindObjectsOfType<ConnectionPipeView>();
+      foreach (ConnectionPipeView pipeView in connectionPipeViews)
+      {
+        if (!pipeView.rotatable)
+        {
+          continue;
+        }
 
-      view.CheckIsTouching()
-        .Then(() =>
-        {
-          ChangeColorByWater(position);
-        })
-        .Catch(exception =>
-        {
-          Debug.LogWarning("Ex: " + exception);
-        });
+        string position = pipeView.GetPosition();
+        pipeView.CheckIsTouching()
+          .Then(() =>
+          {
+            ChangeColorByWater(position);
+            dispatcher.Dispatch(PipeEvents.PipeRotated);
+          })
+          .Catch(exception =>
+          {
+            Debug.LogWarning("Ex: " + exception);
+          });
+      }
     }
 
     private void OnPipeMoved(IEvent evt)

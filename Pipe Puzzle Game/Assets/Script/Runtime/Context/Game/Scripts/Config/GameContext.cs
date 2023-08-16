@@ -8,6 +8,7 @@ using Script.Runtime.Context.Game.Scripts.View.GameMenuPanel;
 using Script.Runtime.Context.Game.Scripts.View.ItemSlot;
 using Script.Runtime.Context.Game.Scripts.View.MainMenuPanel;
 using Script.Runtime.Context.Game.Scripts.View.Pipe.ConnectionPipe;
+using Script.Runtime.Context.Game.Scripts.View.Pipe.EndPipe;
 using Script.Runtime.Context.Game.Scripts.View.PipeSlot;
 using strange.extensions.context.api;
 using strange.extensions.context.impl;
@@ -40,6 +41,7 @@ namespace Script.Runtime.Context.Game.Scripts.Config
       mediationBinder.Bind<GameMenuPanelView>().To<GameMenuPanelMediator>();
       mediationBinder.Bind<GameBoardView>().To<GameBoardMediator>();
       mediationBinder.Bind<PipeSlotView>().To<PipeSlotMediator>();
+      mediationBinder.Bind<EndPipeView>().To<EndPipeMediator>();
 
       commandBinder.Bind(PipeEvents.PipeMoved).To<PipePositionChangedCommand>();
     }

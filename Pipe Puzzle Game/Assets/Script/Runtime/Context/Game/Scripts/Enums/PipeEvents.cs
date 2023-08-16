@@ -2,6 +2,7 @@
 {
   public enum PipeEvents
   {
-    PipeMoved
+    PipeMoved,
+    PipeRotated
   }
 }
